@@ -6,9 +6,8 @@ import com.zinoview.androiddaggerapp.Numbers
 import com.zinoview.androiddaggerapp.core.ResourceProvider
 import dagger.Module
 import dagger.Provides
-import javax.inject.Singleton
 
-@Module
+@Module(includes = [NetworkModule::class,UiModule::class])
 class AppModule(
     private val application: Application
 ) {
@@ -17,8 +16,10 @@ class AppModule(
     fun provideContext() : Context = application
 
     @Provides
-    fun provideNumbers() : Numbers {
-        return Numbers.Base()
+    fun provideNumbers(resourceProvider: ResourceProvider) : Numbers {
+        return Numbers.Base(
+            resourceProvider
+        )
     }
 
     @Provides

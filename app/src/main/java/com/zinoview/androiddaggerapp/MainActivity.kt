@@ -3,8 +3,13 @@ package com.zinoview.androiddaggerapp
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.util.Log
+import androidx.activity.viewModels
+import androidx.lifecycle.ViewModelProvider
 import com.zinoview.androiddaggerapp.core.App
 import com.zinoview.androiddaggerapp.core.ResourceProvider
+import com.zinoview.androiddaggerapp.data.cloud.CloudDataSource
+import com.zinoview.androiddaggerapp.ui.MainViewModel
+import com.zinoview.androiddaggerapp.ui.MainViewModelFactory
 import javax.inject.Inject
 
 fun Any?.log(message: String) {
@@ -17,7 +22,11 @@ class MainActivity : AppCompatActivity() {
     lateinit var numbers: Numbers
 
     @Inject
-    lateinit var resourceProvider: ResourceProvider
+    lateinit var mainViewModelFactory: MainViewModelFactory
+
+    val viewModel by viewModels<MainViewModel.Base>() {
+        mainViewModelFactory as MainViewModelFactory.Base
+    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -26,6 +35,8 @@ class MainActivity : AppCompatActivity() {
         (application as App).component.inject(this)
 
         log("Numbers sum ${numbers.sum()}")
-        log("App name ${resourceProvider.string(R.string.app_name)}")
+        log("Numbers app name ${numbers.appName()}")
+
+        log("ViewModel ${viewModel.data()}")
     }
 }
